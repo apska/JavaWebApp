@@ -7,9 +7,16 @@ import com.github.apska.webapp.model.Link;
  */
 public class Main {
     public static void main(String[] args) {
-        Link l = new Link("YANDEX", "yandex.ru");
+        Link l1 = new Link("YANDEX", "yandex.ru");
 
-        System.out.println(l);
+        Link l2 = l1;
+
+        Link l3 = new Link(l1);
+
+        System.out.println(l1.getClass());
+
+        System.out.println(l1.equals(l2));
+        System.out.println(l1.equals(l3));
 
     }
 }
