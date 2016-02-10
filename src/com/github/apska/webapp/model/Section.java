@@ -5,5 +5,5 @@ package com.github.apska.webapp.model;
  * on 09.02.2016
  */
 public class Section {
-    String type;
+    SectionType type;
 }
