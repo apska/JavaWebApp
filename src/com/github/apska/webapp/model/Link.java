@@ -5,8 +5,14 @@ package com.github.apska.webapp.model;
  * on 06.02.2016
  */
 public class Link {
+    public static Link EMPTY = new Link();
+
     private final String name;
     private final String url;
+
+    public Link() {
+        this("", null);
+    }
 
     public Link(String name, String url) {
         this.name = name;
@@ -14,8 +20,13 @@ public class Link {
     }
 
     public Link(Link link) {
-        this.name = link.name;
-        this.url = link.url;
+        //this.name = link.name;
+        //this.url = link.url;
+        this(link.name, link.url);
+    }
+
+    public static Link empty(){
+        return EMPTY;
     }
 
     @Override
