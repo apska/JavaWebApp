@@ -45,4 +45,5 @@ public class ArrayStorage implements IStorage {
     public int size() {
         return 0;
     }
+
 }
