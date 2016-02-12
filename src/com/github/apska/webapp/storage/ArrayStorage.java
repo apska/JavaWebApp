@@ -9,7 +9,10 @@ import java.util.Collection;
  * on 11.02.2016
  */
 public class ArrayStorage implements IStorage {
-    private Resume[] array = new Resume[100];
+    private static final int LIMIT = 100;
+
+    private Resume[] array = new Resume[LIMIT];
+    int idx = 0;
 
     @Override
     public void clear() {
@@ -18,7 +21,25 @@ public class ArrayStorage implements IStorage {
 
     @Override
     public void save(Resume r) {
+        int idx = -1;
+        for (int i=0; i < LIMIT; i++){
+            Resume resume = array[i];
+            if (array[i] != null){
+                if (r.equals(resume)){
+                    throw new IllegalStateException("Сохраняемое резюме уже существует");
+                }
+            } else if (idx == -1){
+                idx = i;
+            }
+        }
 
+        array[idx] = r;
+
+        /*for (int i=0; i < LIMIT; i++){
+            if (array[i] == null){
+                array[i] = r;
+            }
+        }*/
     }
 
     @Override
