@@ -12,10 +12,10 @@ import java.util.logging.Logger;
  * Created by APS2
  * on 11.02.2016
  */
-public class ArrayStorage implements IStorage {
+public class ArrayStorage extends AbstractStorage {
     private static final int LIMIT = 100;
-    //protected Logger LOGGER = Logger.getLogger(getClass().getName());
-    private static Logger LOGGER = Logger.getLogger(ArrayStorage.class.getName());
+    //protected Logger logger = Logger.getLogger(getClass().getName());
+    //private static Logger LOGGER = Logger.getLogger(ArrayStorage.class.getName());
 
     private Resume[] array = new Resume[LIMIT];
     private int idx = 0;
@@ -27,7 +27,7 @@ public class ArrayStorage implements IStorage {
             array[i] = null;
         }*/
 
-        LOGGER.info("Clear ArrayStorage of resumes.");
+        logger.info("Clear ArrayStorage of resumes.");
 
         //тоже самое что и код закомментированный код сверху
         Arrays.fill(array, null);
@@ -35,9 +35,7 @@ public class ArrayStorage implements IStorage {
     }
 
     @Override
-    public void save(Resume r) throws WebAppException {
-        LOGGER.info("Save resume in ArrayStorage with uuid = " + r.getUuid());
-
+    protected void doSave(Resume r) {
         int idx = getIndex(r.getUuid());
 
         if (idx != -1) {
@@ -45,7 +43,7 @@ public class ArrayStorage implements IStorage {
                 throw new WebAppException("Resume with uuid = " + r.getUuid() + "already exist in ArrayStorage.", r);
             } catch (WebAppException e) {
                 //e.printStackTrace();
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                logger.log(Level.SEVERE, e.getMessage(), e);
                 throw new IllegalStateException(e);
             }*/
 
@@ -75,8 +73,8 @@ public class ArrayStorage implements IStorage {
     }
 
     @Override
-    public void update(Resume r) throws WebAppException {
-        LOGGER.info("Update resume in ArrayStorage with uuid = " + r.getUuid());
+    public void update(Resume r) {
+        logger.info("Update resume in ArrayStorage with uuid = " + r.getUuid());
         int idx = getIndex(r.getUuid());
         if (idx == -1)
             throw new WebAppException("Resume with uuid = " + r.getUuid() + " not exist in ArrayStorage.", r);
@@ -84,8 +82,8 @@ public class ArrayStorage implements IStorage {
     }
 
     @Override
-    public void delete(String uuid) throws WebAppException {
-        LOGGER.info("Delete resume in ArrayStorage with uuid = " + uuid);
+    public void delete(String uuid) {
+        logger.info("Delete resume in ArrayStorage with uuid = " + uuid);
         int idx = getIndex(uuid);
         if (idx == -1) throw new WebAppException("Resume with uuid = \"" + uuid + "\" not exist in ArrayStorage.");
 
@@ -97,8 +95,8 @@ public class ArrayStorage implements IStorage {
     }
 
     @Override
-    public Resume load(String uuid) throws WebAppException {
-        LOGGER.info("Load resume in ArrayStorage with uuid = " + uuid);
+    public Resume load(String uuid)  {
+        logger.info("Load resume in ArrayStorage with uuid = " + uuid);
         int idx = getIndex(uuid);
         if (idx == -1) throw new WebAppException("Resume with uuid = " + uuid + " not exist in ArrayStorage.");
         return array[idx];
@@ -106,6 +104,7 @@ public class ArrayStorage implements IStorage {
 
     @Override
     public Collection<Resume> getAllSorted() {
+        //TODO via comparator
         Arrays.sort(array, 0, size);
         return Arrays.asList(Arrays.copyOf(array, size));
     }

@@ -6,7 +6,7 @@ import com.github.apska.webapp.model.Resume;
  * Created by APS2
  * on 12.02.2016
  */
-public class WebAppException extends Exception {
+public class WebAppException extends RuntimeException {
     private Resume resume = null;
     private String uuid = null;
 

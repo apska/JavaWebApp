@@ -9,7 +9,7 @@ import java.util.UUID;
  * Created by APS2
  * on 06.02.2016
  */
-public class Resume implements Comparable<Resume>{
+public final class Resume implements Comparable<Resume>{
     private String uuid;
     private String fullName;
     private String location;
