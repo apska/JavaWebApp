@@ -78,7 +78,8 @@ public class ArrayStorage implements IStorage {
     public void update(Resume r) throws WebAppException {
         LOGGER.info("Update resume in ArrayStorage with uuid = " + r.getUuid());
         int idx = getIndex(r.getUuid());
-        if (idx != -1) throw new WebAppException("Resume with uuid = " + r.getUuid() + "not exist in ArrayStorage.", r);
+        if (idx == -1)
+            throw new WebAppException("Resume with uuid = " + r.getUuid() + " not exist in ArrayStorage.", r);
         array[idx] = r;
     }
 
@@ -86,12 +87,12 @@ public class ArrayStorage implements IStorage {
     public void delete(String uuid) throws WebAppException {
         LOGGER.info("Delete resume in ArrayStorage with uuid = " + uuid);
         int idx = getIndex(uuid);
-        if (idx != -1) throw new WebAppException("Resume with uuid = " + uuid + "not exist in ArrayStorage.");
+        if (idx == -1) throw new WebAppException("Resume with uuid = \"" + uuid + "\" not exist in ArrayStorage.");
 
         int numMoved = size - idx - 1;
-        if (numMoved > 0)
-            System.arraycopy(array, idx+1, array, idx,
-                    numMoved);
+        if (numMoved > 0) {
+            System.arraycopy(array, idx + 1, array, idx, numMoved);
+        }
         array[--size] = null; // clear to let GC do its work
     }
 
@@ -99,7 +100,7 @@ public class ArrayStorage implements IStorage {
     public Resume load(String uuid) throws WebAppException {
         LOGGER.info("Load resume in ArrayStorage with uuid = " + uuid);
         int idx = getIndex(uuid);
-        if (idx != -1) throw new WebAppException("Resume with uuid = " + uuid + "not exist in ArrayStorage.");
+        if (idx == -1) throw new WebAppException("Resume with uuid = " + uuid + " not exist in ArrayStorage.");
         return array[idx];
     }
 
@@ -111,12 +112,12 @@ public class ArrayStorage implements IStorage {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     private int getIndex(String uuid) {
         for (int i = 0; i < LIMIT; i++) {
-            if (array[i] != null){
+            if (array[i] != null) {
                 if (array[i].getUuid().equals(uuid)) {
                     return i;
                 }
