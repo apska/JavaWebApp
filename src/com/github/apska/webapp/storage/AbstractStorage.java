@@ -48,7 +48,7 @@ abstract public class AbstractStorage implements IStorage {
     }
 
     @Override
-    public int size() {
+     public int size() {
         return 0;
     }
 }

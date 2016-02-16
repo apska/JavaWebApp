@@ -1,5 +1,6 @@
 package com.github.apska.webapp.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,5 +9,22 @@ import java.util.List;
  */
 public class Organization {
     private Link link;
-    List<OrganizationPeriod> periods;
+    private List<Period> periods;
+
+    public static class Period {
+        private Date startDates;
+        private Date endDates;
+        private String position;
+        private String content;
+
+        public Period() {
+        }
+
+        public Period(Date startDates, String content, String position, Date endDates) {
+            this.startDates = startDates;
+            this.content = content;
+            this.position = position;
+            this.endDates = endDates;
+        }
+    }
 }
