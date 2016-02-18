@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by APS2
@@ -66,6 +68,8 @@ abstract public class AbstractStorageTest {
         storage.load("dummy");
     }
 
+
+
     @org.junit.Test
     public void testDelete() throws Exception {
         storage.delete(R1.getUuid());
@@ -81,14 +85,33 @@ abstract public class AbstractStorageTest {
 
     @org.junit.Test
     public void testGetAllSorted() throws Exception {
-        Resume[] src = new Resume[]{R1, R2, R3};
+        /*Resume[] src = new Resume[]{R1, R2, R3};
         Arrays.sort(src);
+        Assert.assertArrayEquals(src, storage.getAllSorted().toArray());*/
 
-        Assert.assertArrayEquals(src, storage.getAllSorted().toArray());
+        List<Resume> list = Arrays.asList(R1, R2, R3);
+        Collections.sort(list);
+        Assert.assertEquals(list, storage.getAllSorted());
     }
 
     @org.junit.Test
     public void testSize() throws Exception {
         Assert.assertEquals(3, storage.size());
+    }
+
+    @org.junit.Test(expected = WebAppException.class)
+    public void testDeleteMissed() throws Exception {
+        storage.delete("dummy");
+    }
+
+    @org.junit.Test(expected = WebAppException.class)
+    public void testSavePresented() throws Exception {
+        storage.save(R1);
+    }
+
+    @org.junit.Test(expected = WebAppException.class)
+    public void testUpdateMissed() throws Exception {
+        Resume resume = new Resume("dummy", "fullName_U1", "location_U1");
+        storage.update(resume);
     }
 }
