@@ -1,6 +1,5 @@
 package lesson03;
 
-import com.github.apska.webapp.model.Contact;
 import com.github.apska.webapp.model.ContactType;
 import com.github.apska.webapp.model.Link;
 
@@ -12,7 +11,7 @@ import java.lang.reflect.Field;
  */
 public class Main {
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
-        Contact c = new Contact(ContactType.PHONE, "12321");
+        //Contact c = new Contact(ContactType.PHONE, "12321");
         ContactType c2 = ContactType.ICQ;
         //System.out.println(ContactType.ICQ == c2 );
 

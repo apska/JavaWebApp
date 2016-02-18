@@ -1,20 +1,18 @@
 package com.github.apska.webapp.model;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by APS2
  * on 06.02.2016
  */
-public final class Resume implements Comparable<Resume>{
+public final class Resume {//implements Comparable<Resume> {
     private String uuid;
     private String fullName;
     private String location;
     private String homePage;
-    private List<Contact> contacts = new LinkedList<>();
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+
     private List<Section> sections = new LinkedList<>();
 
     public  Resume(){
@@ -53,8 +51,11 @@ public final class Resume implements Comparable<Resume>{
         sections.add(section);
     }
 
-    public void addContact(Contact contact){
-        contacts.add(contact);
+    public void addContact(ContactType type, String value){
+        contacts.put(type, value);
+    }
+    public String getContact(ContactType type){
+        return contacts.get(type);
     }
 
     public String getUuid() {
@@ -73,10 +74,6 @@ public final class Resume implements Comparable<Resume>{
         return homePage;
     }
 
-    public List<Contact> getContacts() {
-        return contacts;
-    }
-
     public List<Section> getSections() {
         return sections;
     }
@@ -93,8 +90,17 @@ public final class Resume implements Comparable<Resume>{
         this.fullName = fullName;
     }
 
-    @Override
+//    @Override
     public int compareTo(Resume o) {
         return fullName.compareTo(o.fullName);
     }
+
+    /*private String getEmail(List<Contact> list) {
+        for(Contact c : list){
+            if(c.getType() == ContactType.MAIL){
+                return c.getValue();
+            }
+            return null;
+        }
+    }*/
 }
