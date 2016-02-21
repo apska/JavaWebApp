@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * Created by APS2
  * on 11.02.2016
  */
-public class ArrayStorage extends AbstractStorage {
+public class ArrayStorage extends AbstractStorage<Integer> {
     private static final int LIMIT = 100;
 
     private Resume[] array = new Resume[LIMIT];
@@ -31,30 +31,22 @@ public class ArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean exist(String uuid) {
-        return getIndex(uuid) != -1;
+    protected boolean isExist(Integer idx) {
+        return idx != -1;
     }
 
     @Override
-    protected void doUpdate(Resume r) {
-        int idx = getIndex(r.getUuid());
-        if (idx == -1)
-            throw new WebAppException("Resume with uuid = " + r.getUuid() + " not exist in ArrayStorage.", r);
+    protected void doUpdate(Integer idx, Resume r) {
         array[idx] = r;
     }
 
     @Override
-    protected Resume doLoad(String uuid) {
-        int idx = getIndex(uuid);
-        if (idx == -1) throw new WebAppException("Resume with uuid = " + uuid + " not exist in ArrayStorage.");
+    protected Resume doLoad(Integer idx) {
         return array[idx];
     }
 
     @Override
-    protected void doDelete(String uuid) {
-        int idx = getIndex(uuid);
-        if (idx == -1) throw new WebAppException("Resume with uuid = \"" + uuid + "\" not exist in ArrayStorage.");
-
+    protected void doDelete(Integer idx) {
         int numMoved = size - idx - 1;
         if (numMoved > 0) {
             System.arraycopy(array, idx + 1, array, idx, numMoved);
@@ -63,9 +55,8 @@ public class ArrayStorage extends AbstractStorage {
     }
 
 
-
     @Override
-    protected void doSave(Resume r) {
+    protected void doSave(Integer ctx, Resume r) {
         array[size++] = r;
     }
 
@@ -74,7 +65,9 @@ public class ArrayStorage extends AbstractStorage {
         return size;
     }
 
-    private int getIndex(String uuid) {
+
+    @Override
+    protected Integer getContext(String uuid) {
         for (int i = 0; i < LIMIT; i++) {
             if (array[i] != null) {
                 if (array[i].getUuid().equals(uuid)) {

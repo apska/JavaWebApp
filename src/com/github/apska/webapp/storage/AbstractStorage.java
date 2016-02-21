@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  * Created by APS2
  * on 13.02.2016
  */
-abstract public class AbstractStorage implements IStorage {
+abstract public class AbstractStorage<C> implements IStorage {
     protected final Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
@@ -21,59 +21,64 @@ abstract public class AbstractStorage implements IStorage {
 
     protected abstract void doClear();
 
-    protected abstract boolean exist(String uuid);
+    protected abstract C getContext(String uuid);
+    protected abstract boolean isExist(C ctx);
 
     @Override
     public void save(Resume r) {
         logger.info("Save resume in ArrayStorage with uuid = " + r.getUuid());
 
-        if (exist(r.getUuid())) {
+        C ctx = getContext(r);
+        if (isExist(ctx)) {
             throw new WebAppException("Resume with uuid \"" + r.getUuid() + "\" already exist.", r);
         }
 
-        doSave(r);
+        doSave(ctx, r);
     }
 
-    protected abstract void doSave(Resume r);
+    protected abstract void doSave(C ctx, Resume r);
 
     @Override
     public void update(Resume r) {
         logger.info("Update resume in ArrayStorage with uuid = " + r.getUuid());
 
-        if (!exist(r.getUuid())) {
+        C ctx = getContext(r);
+        if (!isExist(ctx)) {
             throw new WebAppException("Resume with uuid \"" + r.getUuid() + "\" not exist.", r);
         }
 
-        doUpdate(r);
+        doUpdate(ctx, r);
     }
 
-    protected abstract void doUpdate(Resume r);
+    protected abstract void doUpdate(C ctx, Resume r);
 
     @Override
     public Resume load(String uuid) {
         logger.info("Load resume in ArrayStorage with uuid = " + uuid);
 
-        if (!exist(uuid)) {
+        C ctx = getContext(uuid);
+        if (!isExist(ctx)) {
             throw new WebAppException("Resume with uuid \"" + uuid + "\" not exist.", uuid);
         }
 
-        return doLoad(uuid);
+        return doLoad(ctx);
     }
 
-    protected abstract Resume doLoad(String uuid);
+    protected abstract Resume doLoad(C ctx);
 
     @Override
     public void delete(String uuid) {
         logger.info("Delete resume from ArrayStorage with uuid = " + uuid);
 
-        if (!exist(uuid)) {
+        C ctx = getContext(uuid);
+        if (!isExist(ctx)) {
             throw new WebAppException("Resume with uuid \"" + uuid + "\" not exist.", uuid);
         }
 
-        doDelete(uuid);
+        doDelete(ctx);
     }
 
-    protected abstract void doDelete(String uuid);
+    protected abstract void doDelete(C ctx);
 
     @Override
     public Collection<Resume> getAllSorted() {
@@ -106,4 +111,8 @@ abstract public class AbstractStorage implements IStorage {
 
     @Override
     public abstract int size();
+
+    private C getContext(Resume r){
+        return getContext(r.getUuid());
+    }
 }

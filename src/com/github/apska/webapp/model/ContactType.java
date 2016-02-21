@@ -12,6 +12,8 @@ public enum ContactType {
     MAIL("Почта"),
     ICQ("ICQ");
 
+    public static ContactType[] VALUES = ContactType.values();
+
     private String title;
 
     ContactType(String title) {

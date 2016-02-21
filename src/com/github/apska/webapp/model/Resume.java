@@ -1,19 +1,32 @@
 package com.github.apska.webapp.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by APS2
  * on 06.02.2016
  */
-public final class Resume {//implements Comparable<Resume> {
+//TODO add serializeble and version
+public class Resume implements Serializable {
+    static final long serialVersionUID = 1L;
+
     private String uuid;
     private String fullName;
     private String location;
     private String homePage;
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
-    private List<Section> sections = new LinkedList<>();
+    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+
+    public static final Resume EMPTY;
+
+    static {
+        EMPTY = new Resume();
+        //for (SectionType type : SectionType.values()){
+            //EMPTY.addSection(type, type.getSectionClass().getEmptySection);
+        //}
+    }
 
     public  Resume(){
 
@@ -47,8 +60,8 @@ public final class Resume {//implements Comparable<Resume> {
         return uuid.equals(other.uuid);
     }
 
-    public void addSection(Section section){
-        sections.add(section);
+    public void addSection(SectionType type, Section section){
+        sections.put(type, section);
     }
 
     public void addContact(ContactType type, String value){
@@ -56,6 +69,10 @@ public final class Resume {//implements Comparable<Resume> {
     }
     public String getContact(ContactType type){
         return contacts.get(type);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
     }
 
     public String getUuid() {
@@ -74,7 +91,11 @@ public final class Resume {//implements Comparable<Resume> {
         return homePage;
     }
 
-    public List<Section> getSections() {
+    public Section getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public Map<SectionType, Section> getSections() {
         return sections;
     }
 
@@ -103,4 +124,12 @@ public final class Resume {//implements Comparable<Resume> {
             return null;
         }
     }*/
+
+    @Override
+    public String toString() {
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
+    }
 }
