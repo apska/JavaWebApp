@@ -38,6 +38,8 @@ abstract public class AbstractStorageTest {
 
         R3 = new Resume("Полное Имя 3", null);
 
+        //TODO Add Sections
+
         storage.clear();
 
         storage.save(R3);

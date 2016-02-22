@@ -10,6 +10,7 @@ import java.util.List;
  * Created by APS2
  * on 21.02.2016
  */
+//TODO вынести дублирующий код из подклассов
 abstract public class FileStorage extends AbstractStorage<File> {
     private File dir;
 
@@ -30,7 +31,7 @@ abstract public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected File getContext(String fileName) {
-        return new File(fileName);
+        return new File(dir, fileName);
     }
 
     @Override

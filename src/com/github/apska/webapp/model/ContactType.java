@@ -1,10 +1,12 @@
 package com.github.apska.webapp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by APS2
  * on 10.02.2016
  */
-public enum ContactType {
+public enum ContactType implements Serializable {
     PHONE("Тел."),
     MOBILE("Мобильный"),
     HOME_PHONE("Домашний тел."),

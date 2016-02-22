@@ -19,21 +19,8 @@ public class SerializeFileStorage extends FileStorage {
     }
 
     protected void write(File file, Resume r) {
-        try (FileOutputStream fos = new FileOutputStream(file); DataOutputStream dos = new DataOutputStream(fos)) {
-            dos.writeUTF(r.getFullName());
-            dos.writeUTF(r.getLocation());
-            dos.writeUTF(r.getHomePage());
-
-            Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
-                dos.writeInt(entry.getKey().ordinal());
-                dos.writeUTF(entry.getValue());
-            }
-
-            dos.writeUTF("SECTIONS");
-
-            //TODO section OUT
+        try (FileOutputStream fos = new FileOutputStream(file); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(r);
         } catch (IOException e) {
             throw new WebAppException("Couldn't write file " + file.getAbsolutePath(), r, e);
         }
@@ -42,20 +29,12 @@ public class SerializeFileStorage extends FileStorage {
 
     protected Resume read(File file) {
         Resume r = new Resume();
-        try (InputStream is = new FileInputStream(file); DataInputStream dis = new DataInputStream(is)){
-            r.setFullName(dis.readUTF());
-            r.setLocation(dis.readUTF());
-            r.setHomePage(dis.readUTF());
-
-            int contactsSize = dis.readInt();
-            for(int i=0; i<contactsSize; i++){
-                r.addContact(ContactType.VALUES[dis.readInt()], dis.readUTF());
-            }
-
-            //TODO section read
+        try (InputStream is = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(is)){
+            return (Resume) ois.readObject();
         }catch (IOException e){
             throw new WebAppException("Couldn't read file "+ file.getAbsolutePath(), e);
+        } catch (ClassNotFoundException e) {
+            throw new WebAppException("Error read resume from file.", e);
         }
-        return null;
     }
 }

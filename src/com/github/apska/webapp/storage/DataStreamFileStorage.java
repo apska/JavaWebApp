@@ -5,7 +5,6 @@ import com.github.apska.webapp.model.ContactType;
 import com.github.apska.webapp.model.Resume;
 
 import java.io.*;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,8 +21,14 @@ public class DataStreamFileStorage extends FileStorage {
     protected void write(File file, Resume r) {
         try (FileOutputStream fos = new FileOutputStream(file); DataOutputStream dos = new DataOutputStream(fos)) {
             dos.writeUTF(r.getFullName());
-            dos.writeUTF(r.getLocation());
-            dos.writeUTF(r.getHomePage());
+
+            String location = r.getLocation();
+            if (location != null)
+                dos.writeUTF(location);
+
+            String homePage = r.getHomePage();
+            if (homePage != null)
+                dos.writeUTF(homePage);
 
             Map<ContactType, String> contacts = r.getContacts();
             dos.writeInt(contacts.size());
@@ -31,8 +36,6 @@ public class DataStreamFileStorage extends FileStorage {
                 dos.writeInt(entry.getKey().ordinal());
                 dos.writeUTF(entry.getValue());
             }
-
-            dos.writeUTF("SECTIONS");
 
             //TODO section OUT
         } catch (IOException e) {
