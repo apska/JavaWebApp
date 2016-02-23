@@ -147,6 +147,10 @@ public class Resume implements Serializable {
         return "Resume{" +
                 "uuid='" + uuid + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", location='" + location + '\'' +
+                ", homePage='" + homePage + '\'' +
+                ", contacts=" + contacts +
+                ", sections=" + sections +
                 '}';
     }
 }
