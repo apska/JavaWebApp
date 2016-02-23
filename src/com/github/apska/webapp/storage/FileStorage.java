@@ -52,9 +52,25 @@ abstract public class FileStorage extends AbstractStorage<File> {
         write(file, r);
     }
 
-    abstract protected void write(File file, Resume r);
+    protected void write(File file, Resume r){
+        try {
+            write(new FileOutputStream(file), r);
+        } catch (IOException e) {
+            throw new WebAppException("Couldn't write file " + file.getAbsolutePath(), r, e);
+        }
+    }
 
-    abstract protected Resume read(File file);
+    protected Resume read(File file){
+        try {
+            return read(new FileInputStream(file));
+        } catch (IOException e) {
+            throw new WebAppException("Couldn't read file " + file.getAbsolutePath(), e);
+        }
+    }
+
+    abstract protected void write(OutputStream os, Resume r) throws IOException;
+
+    abstract protected Resume read(InputStream is) throws IOException;
 
     @Override
     protected void doUpdate(File file, Resume r) {
