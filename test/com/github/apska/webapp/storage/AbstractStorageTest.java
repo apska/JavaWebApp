@@ -3,6 +3,7 @@ package com.github.apska.webapp.storage;
 import com.github.apska.webapp.WebAppException;
 import com.github.apska.webapp.model.ContactType;
 import com.github.apska.webapp.model.Resume;
+import com.github.apska.webapp.model.SectionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -31,6 +32,9 @@ abstract public class AbstractStorageTest {
         R1 = new Resume("Полное Имя 1", "location1");
         R1.addContact(ContactType.MAIL, "apska@mail.ru");
         R1.addContact(ContactType.PHONE, "11111");
+//        R1.addObjective("Objective1");
+//        R1.addMultiTextSection(SectionType.ACHIEVEMENT, "Achivment11", "Achivment12");
+//        R1.addMultiTextSection(SectionType.QUALIFICATIONS, "Java", "SQL");
 
         R2 = new Resume("Полное Имя 2", null);
         R2.addContact(ContactType.SKYPE, "skype2");
@@ -38,7 +42,7 @@ abstract public class AbstractStorageTest {
 
         R3 = new Resume("Полное Имя 3", null);
 
-        //TODO Add Sections
+        //TODO Add Experience and education
 
         storage.clear();
 

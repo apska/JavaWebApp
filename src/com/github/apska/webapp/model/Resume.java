@@ -7,7 +7,6 @@ import java.util.*;
  * Created by APS2
  * on 06.02.2016
  */
-//TODO add serializeble and version
 public class Resume implements Serializable {
     static final long serialVersionUID = 1L;
 
@@ -30,6 +29,10 @@ public class Resume implements Serializable {
 
     public  Resume(){
 
+    }
+
+    public Resume(String uuid) {
+        this.uuid = uuid;
     }
 
     public Resume(String fullName, String location) {
@@ -57,7 +60,9 @@ public class Resume implements Serializable {
         }
 
         final Resume other = (Resume) obj;
-        return uuid.equals(other.uuid);
+        return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.fullName, other.fullName) &&
+                Objects.equals(this.location, other.location) && Objects.equals(this.homePage, other.homePage) &&
+                Objects.equals(this.contacts, other.contacts) && Objects.equals(this.sections, other.sections);
     }
 
     public void addSection(SectionType type, Section section){
@@ -73,6 +78,10 @@ public class Resume implements Serializable {
 
     public Map<ContactType, String> getContacts() {
         return contacts;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getUuid() {
@@ -109,6 +118,14 @@ public class Resume implements Serializable {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public void addObjective(String value){
+        addSection(SectionType.OBJECTIVE, new TextSection(value));
+    }
+
+    public void addMultiTextSection(SectionType type, String... values){
+        addSection(type, new MultyTextSection(values));
     }
 
 //    @Override

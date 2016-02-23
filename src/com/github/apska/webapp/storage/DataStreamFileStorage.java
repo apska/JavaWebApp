@@ -3,6 +3,8 @@ package com.github.apska.webapp.storage;
 import com.github.apska.webapp.WebAppException;
 import com.github.apska.webapp.model.ContactType;
 import com.github.apska.webapp.model.Resume;
+import com.github.apska.webapp.model.Section;
+import com.github.apska.webapp.model.SectionType;
 
 import java.io.*;
 import java.util.Map;
@@ -12,54 +14,72 @@ import java.util.Map;
  * on 21.02.2016
  */
 public class DataStreamFileStorage extends FileStorage {
-    private File dir;
+    private static final String NULL = "null";
 
     public DataStreamFileStorage(String path) {
         super(path);
     }
 
-    protected void write(File file, Resume r) {
+    protected void write(File file, Resume resume) {
         try (FileOutputStream fos = new FileOutputStream(file); DataOutputStream dos = new DataOutputStream(fos)) {
-            dos.writeUTF(r.getFullName());
+            writeString(dos, resume.getFullName());
 
-            String location = r.getLocation();
-            if (location != null)
-                dos.writeUTF(location);
+            writeString(dos, resume.getLocation());
 
-            String homePage = r.getHomePage();
-            if (homePage != null)
-                dos.writeUTF(homePage);
+            writeString(dos, resume.getHomePage());
 
-            Map<ContactType, String> contacts = r.getContacts();
+            Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
+            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 dos.writeInt(entry.getKey().ordinal());
-                dos.writeUTF(entry.getValue());
+                writeString(dos, entry.getValue());
             }
 
-            //TODO section OUT
+            Map<SectionType, Section> sections = resume.getSections();
+            dos.writeInt(sections.size());
+            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+                SectionType type = entry.getKey();
+                Section section = entry.getValue();
+                dos.writeInt(entry.getKey().ordinal());
+                writeString(dos, type.name());
+            }
+
+
+
+
+
+
         } catch (IOException e) {
-            throw new WebAppException("Couldn't write file " + file.getAbsolutePath(), r, e);
+            throw new WebAppException("Couldn't write file " + file.getAbsolutePath(), resume, e);
         }
 
     }
 
     protected Resume read(File file) {
-        Resume r = new Resume();
-        try (InputStream is = new FileInputStream(file); DataInputStream dis = new DataInputStream(is)){
-            r.setFullName(dis.readUTF());
-            r.setLocation(dis.readUTF());
-            r.setHomePage(dis.readUTF());
+        Resume r = new Resume(file.getName());
+        try (InputStream is = new FileInputStream(file); DataInputStream dis = new DataInputStream(is)) {
+            r.setFullName(readString(dis));
+            r.setLocation(readString(dis));
+            r.setHomePage(readString(dis));
 
             int contactsSize = dis.readInt();
-            for(int i=0; i<contactsSize; i++){
-                r.addContact(ContactType.VALUES[dis.readInt()], dis.readUTF());
+            for (int i = 0; i < contactsSize; i++) {
+                r.addContact(ContactType.VALUES[dis.readInt()], readString(dis));
             }
 
             //TODO section read
-        }catch (IOException e){
-            throw new WebAppException("Couldn't read file "+ file.getAbsolutePath(), e);
+        } catch (IOException e) {
+            throw new WebAppException("Couldn't read file " + file.getAbsolutePath(), e);
         }
-        return null;
+        return r;
+    }
+
+    private void writeString(DataOutputStream dos, String str) throws IOException {
+        dos.writeUTF(str == null ? NULL : str);
+    }
+
+    private String readString(DataInputStream dis) throws IOException {
+        String str = dis.readUTF();
+        return str.equals(NULL) ? null : str;
     }
 }
