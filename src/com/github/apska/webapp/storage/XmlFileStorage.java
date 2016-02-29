@@ -10,10 +10,10 @@ import java.nio.charset.StandardCharsets;
  * Created by APS2
  * on 23.02.2016
  */
-public class XmlStorage extends FileStorage {
+public class XmlFileStorage extends FileStorage {
     private XmlParser xmlParser;
 
-    public XmlStorage(String path) {
+    public XmlFileStorage(String path) {
         super(path);
         xmlParser = new XmlParser(Resume.class, Organization.class, Link.class,
                 OrganizationSection.class, TextSection.class, Organization.Period.class);
