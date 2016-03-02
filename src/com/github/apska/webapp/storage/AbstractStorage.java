@@ -115,4 +115,9 @@ abstract public class AbstractStorage<C> implements IStorage {
     private C getContext(Resume r){
         return getContext(r.getUuid());
     }
+
+    @Override
+    public boolean isSectionSupported() {
+        return true;
+    }
 }

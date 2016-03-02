@@ -6,6 +6,6 @@ package com.github.apska.webapp.storage;
  */
 public class JsonFileStorageTest extends AbstractStorageTest {
     {
-        storage = new JsonFileStorage("./file_storage");
+        storage = new JsonFileStorage(".\\file_storage");
     }
 }

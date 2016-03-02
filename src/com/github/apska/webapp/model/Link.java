@@ -1,22 +1,30 @@
 package com.github.apska.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import java.util.Objects;
+
 /**
  * Created by APS2
  * on 06.02.2016
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Link {
+    static final long serialVersionUID = 1L;
+
     public static Link EMPTY = new Link();
 
     private final String name;
     private final String url;
 
     public Link() {
-        this("", null);
+        this("", "");
     }
 
     public Link(String name, String url) {
+        Objects.requireNonNull(name, "name is null");
         this.name = name;
-        this.url = url;
+        this.url = url == null ? "" : url;
     }
 
     public Link(Link link) {

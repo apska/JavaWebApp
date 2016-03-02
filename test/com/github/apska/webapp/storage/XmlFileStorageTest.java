@@ -6,6 +6,6 @@ package com.github.apska.webapp.storage;
  */
 public class XmlFileStorageTest extends AbstractStorageTest {
     {
-        storage = new XmlFileStorage("./file_storage");
+        storage = new XmlFileStorage(".\\file_storage");
     }
 }

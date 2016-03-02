@@ -8,6 +8,6 @@ import org.junit.runners.Suite;
  * on 23.02.2016
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ArrayStorageTest.class, MapStorageTest.class, DataStreamFileStorageTest.class, SerializeFileStorageTest.class})
+@Suite.SuiteClasses({ArrayStorageTest.class, MapStorageTest.class, DataStreamFileStorageTest.class, SerializeFileStorageTest.class, XmlFileStorageTest.class, JsonFileStorageTest.class})
 public class AllStorageTests {
 }

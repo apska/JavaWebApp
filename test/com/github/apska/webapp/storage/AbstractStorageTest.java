@@ -35,27 +35,29 @@ abstract public class AbstractStorageTest {
         R1 = new Resume("Полное Имя 1", "location1");
         R1.addContact(ContactType.MAIL, "apska@mail.ru");
         R1.addContact(ContactType.PHONE, "11111");
-        R1.addObjective("Objective1");
-        R1.addMultiTextSection(SectionType.ACHIEVEMENT, "Achivment11", "Achivment12");
-        R1.addMultiTextSection(SectionType.QUALIFICATIONS, "Java", "SQL");
 
-       /* R1.addOrganizationSection(SectionType.EXPERIENCE,
-                new Organization("Organization11", null,
-                        new Organization.Period(LocalDate.of(2005, Month.JANUARY, 1), Organization.Period.NOW, "position1", "content1"),
-                        new Organization.Period(2001, Month.MARCH, 2005, Month.JANUARY, "position2", "content2")),
-                new Organization("Organization12", "http://Organization12.ru"));
+        if (storage.isSectionSupported()) {
+            R1.addObjective("Objective1");
+            R1.addMultiTextSection(SectionType.ACHIEVEMENT, "Achivment11", "Achivment12");
+            R1.addMultiTextSection(SectionType.QUALIFICATIONS, "Java", "SQL");
+            R1.addOrganizationSection(SectionType.EXPERIENCE,
+                    new Organization("Organization11", null,
+                            new Organization.Period(LocalDate.of(2005, Month.JANUARY, 1), Organization.Period.NOW, "position1", "content1"),
+                            new Organization.Period(2001, Month.MARCH, 2005, Month.JANUARY, "position2", "content2")),
+                    new Organization("Organization12", "http://Organization12.ru"));
 
-        R1.addOrganizationSection(SectionType.EDUCATION,
-                new Organization("Institute", null,
-                        new Organization.Period(1996, Month.JANUARY, 200, Month.DECEMBER, "aspirant", null),
-                        new Organization.Period(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
-                new Organization("Organization12", "http://Organization12.ru"));*/
+            R1.addOrganizationSection(SectionType.EDUCATION,
+                    new Organization("Institute", null,
+                            new Organization.Period(1996, Month.JANUARY, 200, Month.DECEMBER, "aspirant", null),
+                            new Organization.Period(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
+                    new Organization("Organization12", "http://Organization12.ru"));
+        }
 
-        R2 = new Resume("Полное Имя 2", null);
+        R2 = new Resume("Полное Имя 2", "location2");
         R2.addContact(ContactType.SKYPE, "skype2");
         R2.addContact(ContactType.PHONE, "22222");
 
-        R3 = new Resume("Полное Имя 3", null);
+        R3 = new Resume("Полное Имя 3", "");
 
 
 
