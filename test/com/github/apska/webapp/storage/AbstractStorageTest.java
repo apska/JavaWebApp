@@ -48,7 +48,7 @@ abstract public class AbstractStorageTest {
 
             R1.addOrganizationSection(SectionType.EDUCATION,
                     new Organization("Institute", null,
-                            new Organization.Period(1996, Month.JANUARY, 200, Month.DECEMBER, "aspirant", null),
+                            new Organization.Period(1996, Month.JANUARY, 2001, Month.DECEMBER, "aspirant", "IT facultet"),
                             new Organization.Period(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
                     new Organization("Organization12", "http://Organization12.ru"));
         }

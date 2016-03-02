@@ -1,9 +1,10 @@
 package com.github.apska.webapp.storage;
 
-import com.github.apska.webapp.WebAppException;
 import com.github.apska.webapp.model.*;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 /**
@@ -20,10 +21,10 @@ public class DataStreamFileStorage extends FileStorage {
     @Override
     protected void write(OutputStream os, Resume resume) throws IOException {
         try (final DataOutputStream dos = new DataOutputStream(os)) {
-            writeString(dos, resume.getUuid());
-            writeString(dos, resume.getFullName());
-            writeString(dos, resume.getLocation());
-            writeString(dos, resume.getHomePage());
+            dos.writeUTF(resume.getUuid());
+            dos.writeUTF(resume.getFullName());
+            dos.writeUTF(resume.getLocation());
+            dos.writeUTF(resume.getHomePage());
 
             Map<ContactType, String> contacts = resume.getContacts();
 
@@ -37,7 +38,7 @@ public class DataStreamFileStorage extends FileStorage {
 
             writeCollection(dos, contacts.entrySet(), entry -> {
                 dos.writeInt(entry.getKey().ordinal());
-                writeString(dos, entry.getValue());
+                dos.writeUTF(entry.getValue());
             });
 
             Map<SectionType, Section> sections = resume.getSections();
@@ -45,26 +46,28 @@ public class DataStreamFileStorage extends FileStorage {
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
                 SectionType type = entry.getKey();
                 Section section = entry.getValue();
-                writeString(dos, type.name());
+                dos.writeUTF(type.name());
 
                 switch (type) {
                     case OBJECTIVE:
-                        writeString(dos, ((TextSection) section).getValue());
+                        dos.writeUTF(((TextSection) section).getValue());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        /*writeCollection(dos, ((MultyTextSection) section).getValues(), new ElementWriter<String>() {
-                            @Override
-                            public void write(String value) throws IOException {
-                                writeString(dos, value);
-                            }
-                        });*/
-
-                        writeCollection(dos, ((MultyTextSection) section).getValues(), value -> writeString(dos, value));
+                        writeCollection(dos, ((MultyTextSection) section).getValues(), dos::writeUTF);
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-
+                        writeCollection(dos, ((OrganizationSection) section).getValues(), (org) -> {
+                            dos.writeUTF(org.getLink().getName());
+                            dos.writeUTF(org.getLink().getUrl());
+                            writeCollection(dos, org.getPeriods(), period -> {
+                                DataStreamFileStorage.this.writeLocalDate(dos, period.getStartDate());
+                                DataStreamFileStorage.this.writeLocalDate(dos, period.getEndDate());
+                                dos.writeUTF(period.getPosition());
+                                dos.writeUTF(period.getContent());
+                            });
+                        });
                         break;
 
                 }
@@ -72,34 +75,36 @@ public class DataStreamFileStorage extends FileStorage {
         }
     }
 
-
+    @Override
     protected Resume read(InputStream is) throws IOException {
-    //protected Resume read(File file) {
         Resume r = new Resume();
         try (DataInputStream dis = new DataInputStream(is)) {
-            r.setUuid(readString(dis));
-            r.setFullName(readString(dis));
-            r.setLocation(readString(dis));
-            r.setHomePage(readString(dis));
+            r.setUuid(dis.readUTF());
+            r.setFullName(dis.readUTF());
+            r.setLocation(dis.readUTF());
+            r.setHomePage(dis.readUTF());
 
             int contactsSize = dis.readInt();
             for (int i = 0; i < contactsSize; i++) {
-                r.addContact(ContactType.VALUES[dis.readInt()], readString(dis));
+                r.addContact(ContactType.VALUES[dis.readInt()], dis.readUTF());
             }
 
             final int sectionSize = dis.readInt();
             for(int i=0; i < sectionSize; i++){
-                SectionType sectionType = SectionType.valueOf(readString(dis));
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType){
                     case OBJECTIVE:
-                        r.addObjective(readString(dis));
+                        r.addObjective(dis.readUTF());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.addSection(sectionType, new MultyTextSection(readList(dis, () -> readString(dis))));
+                        r.addSection(sectionType, new MultyTextSection(readList(dis, dis::readUTF)));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
+                        r.addSection(sectionType,
+                                new OrganizationSection(readList(dis, () -> new Organization(new Link(dis.readUTF(), dis.readUTF()),
+                                        readList(dis, () -> new Organization.Period(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()))))));
                         break;
                 }
             }
@@ -107,13 +112,14 @@ public class DataStreamFileStorage extends FileStorage {
         }
     }
 
-    private void writeString(DataOutputStream dos, String str) throws IOException {
-        dos.writeUTF(str == null ? NULL : str);
+    private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
+        Objects.requireNonNull(ld, "LocalDate cannot be null, use Period.NOW");
+        dos.writeInt(ld.getYear());
+        dos.writeUTF(ld.getMonth().name());
     }
 
-    private String readString(DataInputStream dis) throws IOException {
-        String str = dis.readUTF();
-        return str.equals(NULL) ? null : str;
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), Month.valueOf(dis.readUTF()), 1);
     }
 
     private interface ElementWriter<T>{

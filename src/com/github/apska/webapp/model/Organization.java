@@ -64,9 +64,9 @@ public class Organization implements Serializable {
             this(LocalDate.of(startYear, startMonth, 1), LocalDate.of(endYear, endMonth, 1), position, content);
         }
 
-        public Period(LocalDate startDate, LocalDate endDates, String content, String position) {
+        public Period(LocalDate startDate, LocalDate endDate, String position, String content) {
             Objects.requireNonNull(startDate, "startDate is null");
-            Objects.requireNonNull(startDate, "position is null");
+            Objects.requireNonNull(position, "position is null");
             this.startDate = startDate;
             this.endDate = endDate == null ? NOW : endDate;
             this.position = position;

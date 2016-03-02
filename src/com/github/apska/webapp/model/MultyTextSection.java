@@ -12,7 +12,7 @@ import java.util.List;
 public class MultyTextSection extends Section {
     static final long serialVersionUID = 1L;
 
-    private List<String> values;
+    private List<String> values = new LinkedList<>();
 
     public MultyTextSection() {
     }
