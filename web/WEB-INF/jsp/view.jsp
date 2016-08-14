@@ -30,7 +30,7 @@
   <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
-
+<jsp:include page="fragments/header.jsp"/>
 <section>
   <h2>${resume.fullName}</h2>
   <c:if test="${not empty  resume.homePage}">
@@ -88,5 +88,6 @@
   </table>
   <button onclick="window.history.back()">ОК</button>
 </section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

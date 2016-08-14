@@ -167,4 +167,8 @@ public class Resume implements Serializable {
                 ", sections=" + sections +
                 '}';
     }
+
+    public void removeContact(ContactType type) {
+        contacts.remove(type);
+    }
 }

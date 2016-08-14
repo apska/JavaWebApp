@@ -1,25 +1,23 @@
 package com.github.apska.webapp.web;
 
 import com.github.apska.webapp.model.ContactType;
+import com.github.apska.webapp.model.Organization;
 import com.github.apska.webapp.model.Resume;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
 public class HtmlUtil {
-    public static String getContact(Resume r, ContactType type) {
-        String contact = r.getContact(type);
-        return contact == null ? "&nbsp;" : type.toHtml(contact);
-    }
-
-    /*public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
 
     public static String mask(String str) {
         return (str == null || str.isEmpty()) ? "&nbsp;" : str;
     }
 
-
+    public static String getContact(Resume r, ContactType type) {
+        String contact = r.getContact(type);
+        return contact == null ? "&nbsp;" : type.toHtml(contact);
+    }
 
     public static String format(LocalDate date) {
         return date.equals(Organization.Period.NOW) ? "Сейчас" : date.format(DATE_FORMATTER);
@@ -31,5 +29,6 @@ public class HtmlUtil {
 
     public static String input(String name, String value) {
         return String.format("<input type='text' name='%s' size=75 value='%s'>", name, value);
-    }*/
+    }
 }
+

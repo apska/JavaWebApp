@@ -1,9 +1,13 @@
 package com.github.apska.webapp.web;
 
+import com.github.apska.webapp.WebAppConfig;
+import com.github.apska.webapp.model.ContactType;
 import com.github.apska.webapp.model.Resume;
 import com.github.apska.webapp.storage.IStorage;
 import com.github.apska.webapp.storage.XmlFileStorage;
+import com.github.apska.webapp.util.Util;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,14 +20,41 @@ import java.io.Writer;
  * on 01.08.2016
  */
 public class ResumeServlet extends HttpServlet {
-    public static XmlFileStorage storage = new XmlFileStorage("C:\\WEB_APP_JAVA\\JavaWebApp\\file_storage");
+    private IStorage storage;
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String uuid = request.getParameter("uuid");
+        String name = request.getParameter("name");
+        String location = request.getParameter("location");
+        Resume r = Util.isEmpty(uuid) ? new Resume(name, location) : storage.load(uuid);
 
+        r.setFullName(name);
+        r.setLocation(location);
+        r.setHomePage(request.getParameter("home_page"));
+
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if (value == null || value.isEmpty()) {
+                r.removeContact(type);
+            } else {
+                r.addContact(type, value);
+            }
+        }
+
+        if (Util.isEmpty(uuid)) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
+
+        response.sendRedirect("list");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /*response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+
+        /*
         Writer w = response.getWriter();
         String name = request.getParameter("name");
         w.write("Тест сервлет: привет " + name);
@@ -51,5 +82,10 @@ public class ResumeServlet extends HttpServlet {
 
         request.setAttribute("resume", r);
         request.getRequestDispatcher(("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")).forward(request, response);
+    }
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        storage = WebAppConfig.get().getStorage();
     }
 }
