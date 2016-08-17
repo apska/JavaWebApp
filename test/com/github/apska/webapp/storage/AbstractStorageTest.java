@@ -40,7 +40,7 @@ abstract public class AbstractStorageTest {
         if (storage.isSectionSupported()) {
             R1.addObjective("Objective1");
             R1.addMultiTextSection(SectionType.ACHIEVEMENT, "Achivment11", "Achivment12");
-            R1.addMultiTextSection(SectionType.QUALIFICATIONS, "Java", "SQL");
+            R1.addMultiTextSection(SectionType.QUALIFICATIONS, "Java", "Sql");
             R1.addOrganizationSection(SectionType.EXPERIENCE,
                     new Organization("Organization11", null,
                             new Organization.Period(LocalDate.of(2005, Month.JANUARY, 1), Organization.Period.NOW, "position1", "content1"),

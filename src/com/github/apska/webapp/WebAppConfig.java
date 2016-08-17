@@ -1,6 +1,7 @@
 package com.github.apska.webapp;
 
 import com.github.apska.webapp.storage.IStorage;
+import com.github.apska.webapp.storage.SqlStorage;
 import com.github.apska.webapp.storage.XmlFileStorage;
 
 import java.io.InputStream;
@@ -33,11 +34,14 @@ public class WebAppConfig {
             appProps = new Properties();
             appProps.load(webAppProperties);
 
-            storage = new XmlFileStorage(appProps.getProperty("storage.dir"));
-
-            appProps.getProperty("db.url");
+            /*appProps.getProperty("db.url");
             appProps.getProperty("db.user");
-            appProps.getProperty("db.password");
+            appProps.getProperty("db.password");*/
+
+            //storage = new XmlFileStorage(appProps.getProperty("storage.dir"));
+            storage = new SqlStorage(appProps.getProperty("db.url"),
+                                     appProps.getProperty("db.user"),
+                                     appProps.getProperty("db.password"));
 
         }catch(Exception e){
             throw new IllegalStateException(e);
