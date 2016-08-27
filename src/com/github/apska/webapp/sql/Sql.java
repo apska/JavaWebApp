@@ -18,7 +18,7 @@ public class Sql {
     }
 
     public void execute(String sql){
-        execute(sql, ps -> {
+        execute(sql, (PreparedStatement ps) -> {
             ps.execute();
             return null;
         });

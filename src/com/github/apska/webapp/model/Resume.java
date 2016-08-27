@@ -55,6 +55,18 @@ public class Resume implements Serializable {
         this.location = location;
     }
 
+    public Resume(String uuid, String fullName, String location, String homePage) {
+        Objects.requireNonNull(uuid, "uuid is null");
+        Objects.requireNonNull(fullName, "fullName is null");
+        Objects.requireNonNull(location, "location is null");
+        Objects.requireNonNull(homePage, "homePage is null");
+
+        this.uuid = uuid;
+        this.fullName = fullName;
+        this.location = location;
+        this.homePage = homePage;
+    }
+
     @Override
     public int hashCode() {
         return uuid.hashCode();
