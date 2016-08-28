@@ -7,7 +7,9 @@ import com.github.apska.webapp.sql.Sql;
 import com.github.apska.webapp.sql.SqlExecutor;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by APS2
@@ -107,26 +109,25 @@ public class SqlStorage implements IStorage {
 
     @Override
     public Collection<Resume> getAllSorted() {
-        /*return sql.execute("SELECT uuid, full_name, location, home_page " +
+        return sql.execute("SELECT uuid, full_name, location, home_page " +
                         "FROM resume " +
                         "ORDER BY full_name, uuid",
-                new SqlExecutor<Resume>() {
+                new SqlExecutor<List<Resume>>() {
                     @Override
-                    public Resume execute(PreparedStatement ps) throws SQLException {
-                        ps.setString(1, uuid);
+                    public List<Resume> execute(PreparedStatement ps) throws SQLException {
                         ResultSet rs = ps.executeQuery();
-                        if (!rs.next()){
-                            throw new WebAppException("Resume with uuid \"" + uuid + "\" not exist.", uuid);
+
+                        List<Resume> list = new ArrayList<Resume>();
+
+                        while (rs.next()){
+                            list.add(new Resume(rs.getString("uuid"), rs.getString("full_name"),
+                                    rs.getString("location"), rs.getString("home_page")));
                         }
 
-                        Resume r = new Resume(uuid, rs.getString("full_name"), rs.getString("location"));
-
-                        return r;
+                        return list;
                     }
                 }
-        );*/
-
-        return null;
+        );
     }
 
     @Override

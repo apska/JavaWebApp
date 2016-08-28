@@ -3,6 +3,7 @@ package com.github.apska.webapp.web;
 import com.github.apska.webapp.WebAppConfig;
 import com.github.apska.webapp.model.ContactType;
 import com.github.apska.webapp.model.Resume;
+import com.github.apska.webapp.model.SectionType;
 import com.github.apska.webapp.storage.IStorage;
 import com.github.apska.webapp.storage.XmlFileStorage;
 import com.github.apska.webapp.util.Util;
@@ -38,6 +39,18 @@ public class ResumeServlet extends HttpServlet {
                 r.removeContact(type);
             } else {
                 r.addContact(type, value);
+            }
+        }
+
+        for (SectionType type : SectionType.values()){
+            String value = request.getParameter(type.name());
+            if (type.getHtmlType() == SectionHtmlType.ORGANIZATION){
+                continue;
+            }
+            if (value == null || value.isEmpty()){
+                r.getContacts().remove(type);
+            }else{
+                r.addSection(type, type.getHtmlType().createSection(value));
             }
         }
 

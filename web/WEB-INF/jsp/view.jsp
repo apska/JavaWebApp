@@ -67,19 +67,43 @@
         case ACHIEVEMENT:
         case QUALIFICATIONS:
       %>
-      <td>
-        <ul>
-          <c:forEach var="item" items="<%=((MultyTextSection) entry.getValue()).getValues()%>">
-            <li>${item}</li>
-          </c:forEach>
-        </ul>
-      </td>
+      <tr>
+        <td>
+          <ul>
+            <c:forEach var="item" items="<%=((MultyTextSection) entry.getValue()).getValues()%>">
+              <li>${item}</li>
+            </c:forEach>
+          </ul>
+        </td>
       </tr>
       <% break;
         case EXPERIENCE:
         case EDUCATION:
       %>
 
+        <c:forEach var="org" items="<%=((OrganizationSection) entry.getValue()).getValues()%>">
+          <tr>
+            <td>
+              <c:choose>
+                <c:when test="${empty org.link.url}">
+                  ${org.link.name}
+                </c:when>
+                <c:otherwise>
+                  <a href="${org.link.url}">${org.link.name}</a>
+                </c:otherwise>
+              </c:choose>
+            </td>
+          </tr>
+          <c:forEach var="period" items="${org.periods}">
+            <jsp:useBean id="period" type="com.github.apska.webapp.model.Organization.Period"/>
+            <tr>
+              <td>
+                <%=HtmlUtil.format(period.getStartDate())%> - <%=HtmlUtil.format(period.getEndDate())%>
+              </td>
+              <td><b>${period.position}</b><br>${period.content}</td>
+            </tr>
+          </c:forEach>
+        </c:forEach>
       <%
         }
       %>
